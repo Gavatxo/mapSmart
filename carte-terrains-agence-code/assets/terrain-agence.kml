@@ -1,0 +1,1790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>TERRAIN AGENCE</name>
+    <description/>
+    <Style id="icon-1574-673AB7-normal">
+      <IconStyle>
+        <color>ffb73a67</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1574-673AB7-highlight">
+      <IconStyle>
+        <color>ffb73a67</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1574-673AB7">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1574-673AB7-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1574-673AB7-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1574-FFD600-normal">
+      <IconStyle>
+        <color>ff00d6ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1574-FFD600-highlight">
+      <IconStyle>
+        <color>ff00d6ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1574-FFD600">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1574-FFD600-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1574-FFD600-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1574-FFEA00-normal">
+      <IconStyle>
+        <color>ff00eaff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1574-FFEA00-highlight">
+      <IconStyle>
+        <color>ff00eaff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1574-FFEA00">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1574-FFEA00-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1574-FFEA00-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1848-880E4F-normal">
+      <IconStyle>
+        <color>ff4f0e88</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1848-880E4F-highlight">
+      <IconStyle>
+        <color>ff4f0e88</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1848-880E4F">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1848-880E4F-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1848-880E4F-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="line-E65100-4875-nodesc-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>4.875</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-E65100-4875-nodesc-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>7.3125</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-E65100-4875-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-E65100-4875-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-E65100-4875-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="line-E65100-5263-nodesc-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>5.263</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-E65100-5263-nodesc-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>7.8945</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-E65100-5263-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-E65100-5263-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-E65100-5263-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="line-E65100-5844-nodesc-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>5.844</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-E65100-5844-nodesc-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>8.766</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-E65100-5844-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-E65100-5844-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-E65100-5844-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="line-E65100-6038-nodesc-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>6.038</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-E65100-6038-nodesc-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>9.057</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-E65100-6038-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-E65100-6038-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-E65100-6038-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-000000-1200-77-normal">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d000000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-000000-1200-77-highlight">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d000000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-000000-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-000000-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-000000-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-3949AB-1200-77-normal">
+      <LineStyle>
+        <color>ffab4939</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4dab4939</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-3949AB-1200-77-highlight">
+      <LineStyle>
+        <color>ffab4939</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4dab4939</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-3949AB-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-3949AB-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-3949AB-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-7CB342-1200-77-normal">
+      <LineStyle>
+        <color>ff42b37c</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d42b37c</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-7CB342-1200-77-highlight">
+      <LineStyle>
+        <color>ff42b37c</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d42b37c</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-7CB342-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-7CB342-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-7CB342-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-817717-1200-77-normal">
+      <LineStyle>
+        <color>ff177781</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d177781</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-817717-1200-77-highlight">
+      <LineStyle>
+        <color>ff177781</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d177781</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-817717-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-817717-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-817717-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-9FA8DA-1200-77-normal">
+      <LineStyle>
+        <color>ffdaa89f</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4ddaa89f</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-9FA8DA-1200-77-highlight">
+      <LineStyle>
+        <color>ffdaa89f</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4ddaa89f</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-9FA8DA-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-9FA8DA-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-9FA8DA-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-CE93D8-1200-61-normal">
+      <LineStyle>
+        <color>ffd893ce</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>3dd893ce</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-CE93D8-1200-61-highlight">
+      <LineStyle>
+        <color>ffd893ce</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>3dd893ce</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-CE93D8-1200-61">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-CE93D8-1200-61-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-CE93D8-1200-61-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-E65100-1200-43-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>2b0051e6</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-E65100-1200-43-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>2b0051e6</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-E65100-1200-43">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-E65100-1200-43-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-E65100-1200-43-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-E65100-1200-77-normal">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d0051e6</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-E65100-1200-77-highlight">
+      <LineStyle>
+        <color>ff0051e6</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d0051e6</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-E65100-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-E65100-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-E65100-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-FBC02D-1200-54-nodesc-normal">
+      <LineStyle>
+        <color>ff2dc0fb</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>362dc0fb</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-FBC02D-1200-54-nodesc-highlight">
+      <LineStyle>
+        <color>ff2dc0fb</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>362dc0fb</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-FBC02D-1200-54-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-FBC02D-1200-54-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-FBC02D-1200-54-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-FBC02D-1200-77-normal">
+      <LineStyle>
+        <color>ff2dc0fb</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d2dc0fb</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-FBC02D-1200-77-highlight">
+      <LineStyle>
+        <color>ff2dc0fb</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d2dc0fb</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-FBC02D-1200-77">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-FBC02D-1200-77-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-FBC02D-1200-77-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-FF5252-1200-59-normal">
+      <LineStyle>
+        <color>ff5252ff</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>3b5252ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Style id="poly-FF5252-1200-59-highlight">
+      <LineStyle>
+        <color>ff5252ff</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>3b5252ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="poly-FF5252-1200-59">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-FF5252-1200-59-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-FF5252-1200-59-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Lotissements</name>
+      <Placemark>
+        <name>LOTISSEMENT MAIRIE PERSO</name>
+        <description>3 LOTS 90000€</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.1506082,47.9304783,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement VILLADIM</name>
+        <description><![CDATA[3 LOTS<br>64000 à 70000€]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            2.1128773,47.9695743,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement CLARES</name>
+        <description><![CDATA[16 LOTS<br>Env; 45000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.0202379,48.21149,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement CLARES</name>
+        <description><![CDATA[6 LOTS<br>37000€ à 66000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.6358619,47.6872332,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSMENT CLARES</name>
+        <description><![CDATA[2 LOTS<br>53000 à 56000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.0231201,47.6986552,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement CLARES</name>
+        <description><![CDATA[8 LOTS<br>35000€ à 45000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.5144673,47.7081041,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement CLARES</name>
+        <description><![CDATA[14 LOTS<br>46000€ à 52000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.525371,47.9116508,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT CLARES</name>
+        <description><![CDATA[1 LOTS<br>60000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6954468,48.0487274,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT CLARES</name>
+        <description><![CDATA[2 LOTS<br>80000€ 1400m²]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.108135,47.9912505,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ANATOLE</name>
+        <description><![CDATA[2LOTS<br>99 000€ à 125 000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.0281209,47.9080796,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VIABILIS</name>
+        <description><![CDATA[3 LOTS<br>74000€ à 95000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.1083606,47.9675551,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VIABILIS</name>
+        <description><![CDATA[1 LOTS 77500€ 573m²<br>-2500possible]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6836147,47.8358376,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISEMENT VILLADIM</name>
+        <description><![CDATA[1 LOT<br>88000€ 551m²]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            1.7940657,47.8452325,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VIABILIS</name>
+        <description><![CDATA[28 LOTS<br>PRIX : .....................]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6662233,47.8092858,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT SEDES</name>
+        <description><![CDATA[1 LOTS<br> 115000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8185392,47.9217303,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT TERRAVIA</name>
+        <description><![CDATA[12 LOTS<br>42000€ à 53000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6501543,47.8028116,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description>1 LOT 67000€</description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            1.6305486,47.7932142,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[3 LOTS<br>58000€]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            1.702432,48.0000682,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[4 LOTS 1 ABF<br>43000€ à 49000€]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            1.9380152,47.7070058,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[1 LOTS<br>3074m² 240000€]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            1.9002346,47.8620817,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT 1100 Off.Not</name>
+        <description><![CDATA[6 LOTS COLLE CHEMIN DE FER<br>59000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.7542808,47.8651379,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[2LOTS<br>32000€ 760m²]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            2.1644811,47.6460199,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT NEXITY</name>
+        <description><![CDATA[15 LOTS<br>53000€ à 66000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.9861008,48.039265,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT NEXITY</name>
+        <description><![CDATA[4 LOTS<br>74000€ à 98000€<br>Frais de Notaire Réduit]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.9503929,47.9304894,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT NEXITY</name>
+        <description><![CDATA[6 LOTS<br>95 000€ à 140 000€<br>G2 2m à prévoir sur les semelles]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8804166,47.9584113,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT NEXITY</name>
+        <description><![CDATA[15 LOTS<br>41000€ à 67000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.4618033,48.2100351,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT NEXITY</name>
+        <description><![CDATA[1 LOT 492m²<br>74000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.7947946,47.8221794,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[A l'arret pour le moment]]></description>
+        <styleUrl>#icon-1574-FFEA00</styleUrl>
+        <Point>
+          <coordinates>
+            2.1448086,47.8009151,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT DA CUNHA</name>
+        <description><![CDATA[2 LOTS<br>127000€ et 130000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.9541139,47.9665011,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ONCL (N. JOLY)</name>
+        <description><![CDATA[2 LOTS<br>58500€  850m²]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.2756006,47.8618979,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN</name>
+        <description><![CDATA[1 LOT<br>97500 € 700m²]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8882297,47.9874151,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[LOTISSEMENT SOLE&AIR]]></name>
+        <description><![CDATA[1 LOT<br>576m² 51900€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.7955253,48.0541674,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[LOTISSEMENT Les agents de l'immobilier]]></name>
+        <description><![CDATA[30 LOTS<br>58000€ à 84000€ 420 a 680m²]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6854459,47.8349271,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement MDB</name>
+        <description>1 Lot 405m² à 54000€ </description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.7035642,47.8955224,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT SEMDO</name>
+        <description>14 LOTS de 64000 à 73000 EUROS</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.7064245,47.888653,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT CITIC</name>
+        <description><![CDATA[4 LOTS<br> 120000€ 800m² en moyenne 8min d'Etampes]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.1425167,48.4074326,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT SEMDO</name>
+        <description><![CDATA[Val d'ouest <br>19 LOTS<br>86 000 € à 180 000€ 372m² à 905m²<br>PPRI R+1 OBLIGATOIRE]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8903249,47.8825866,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN</name>
+        <description><![CDATA[1 LOT <br>365m²/66000 €]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.224965,47.8642289,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN</name>
+        <description><![CDATA[4 LOTS<br>500 à 517 m²  PRIX 110 000 €]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8225019,47.9413516,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN </name>
+        <description><![CDATA[1LOT 710 m² / 90 000 €<br>1 LOT 3183 m² / 95000 €]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.0553509,47.9598587,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN</name>
+        <description>5 LOTS de 580 m² à 921 m² de 100 000 à 120 000 €</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.9490051,47.7214312,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ENTRE TERRAIN</name>
+        <description>29 LOTS de 600 à 831 m² / 59 000 à 70 000 €</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.1880829,47.7960961,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT DIL PROM.</name>
+        <description><![CDATA[603m² ET 780m²<br>74 000€ et 76 000 € MICRO PIEUX]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.1369447,47.9217279,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement MDB</name>
+        <description><![CDATA[6 LOTS 440m² à 561m²<br>54000€ à 58000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8769022,48.0859002,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement MDB</name>
+        <description><![CDATA[2 LOT 700m² et 1160m²<br>53000 € et 58000€ Viab]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8838242,48.0859954,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement MDB</name>
+        <description><![CDATA[13 LOTS de 533m² à 876m²<br>54 000€ à 69 000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6051906,47.7577017,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT CLARES</name>
+        <description><![CDATA[10 LOTS de 544m² à 608m²<br>Prix : de 146 000 € à 165 000 €]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8985811,47.8510859,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BACCON VAL DE LOIRE PROMOTION (Clos du bourg)</name>
+        <description>Terrain de 640 m² à 47900 Euros</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6285229,47.8913127,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT EXIA</name>
+        <description><![CDATA[30 LOTS DE 400m² à 773 m²<br>PRIX de 95 0000 à 135 000 Euros]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8389523,47.894696,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement SAEDEL</name>
+        <description><![CDATA[4 Lots<br>54 000€ à 67 000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.9402506,48.2037182,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[4 Lot de 495m² à 673m²<br>59 900€ à 67 900€]]></description>
+        <styleUrl>#icon-1574-FFD600</styleUrl>
+        <Point>
+          <coordinates>
+            2.0434465,47.98891,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement SAFETY J.M</name>
+        <description><![CDATA[12 Lots<br>480m² 522m² 535 m²<br>47000€ 52000€ 57000€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.8241252,48.2621848,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement Vanessa</name>
+        <description><![CDATA[4 Lots de 655 à 720m²<br>45 500€ Viabilisé]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.3548258,47.8314108,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SAEDES</name>
+        <description><![CDATA[13 Lots de 450-622m²<br>44 800€  55 800€]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.889367,48.2004079,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[6 Lots de 1000m²<br>260 000€ Viab ]]></description>
+        <styleUrl>#icon-1574-FFD600</styleUrl>
+        <Point>
+          <coordinates>
+            2.4301315,48.5599312,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT VILLADIM</name>
+        <description><![CDATA[12 Lots de 460 à 549m² Viab<br>de 60 900€ à 64 900€]]></description>
+        <styleUrl>#icon-1574-FFD600</styleUrl>
+        <Point>
+          <coordinates>
+            2.0516895,48.0743147,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lotissement Chintana</name>
+        <description>A venir</description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            1.6181146,47.712839,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LOTISSEMENT ORPI ETAMPES</name>
+        <description><![CDATA[7 LOTS<br>335 ² 465m² ANC Env 50 000 €]]></description>
+        <styleUrl>#icon-1574-673AB7</styleUrl>
+        <Point>
+          <coordinates>
+            2.203706,48.3884607,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>DIFUS</name>
+      <Placemark>
+        <name>Terrain Phanie</name>
+        <description><![CDATA[995²<br>58 000€ Non Viab]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.8551853,47.6333078,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain ValD 13</name>
+        <description><![CDATA[300m²<br>93500€ non viab]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.4688396,48.4029068,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain FERNANDO</name>
+        <description>42000€ 1120m² ou 78000€ les 7620m²</description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.2631792,48.172818,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN COUTANT FI</name>
+        <description><![CDATA[1988m² 39 900€ Viab<br>2331m² 49 900€ Viab]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.6505322,47.8984676,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Vanessa</name>
+        <description><![CDATA[1910m²<br>116 000 €]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.144447,47.9291099,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN DIALLO</name>
+        <description>1800m² 55000€ Pas de TAE</description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.2380211,48.1028212,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Fernand</name>
+        <description>2400m² 60k€</description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.385758,48.035218,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN BSK CARDONNEL 4</name>
+        <description><![CDATA[867m² Non viab // 20Ml<br>95 000 € 15 Min au SUD D'ETAMPES]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.1389538,48.4298087,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain BSK COTTEREAU 5</name>
+        <description><![CDATA[1146m² non viab<br>57 000 €]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.1032089,48.3642031,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Val-Immo 6</name>
+        <description><![CDATA[395m² 78800€<br>15.45mL // Non VIAB]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.3773729,48.3938054,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN IAD KUCUK 7</name>
+        <description><![CDATA[668M²<br>49 999€ non viab]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.3058979,47.812228,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN IAD KUCUK 8</name>
+        <description>36000€ 901m² non viab</description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.3097173,47.8090433,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain IAD KUCUK  9</name>
+        <description><![CDATA[619m² <br>44500€ Non VIAB]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.2481571,48.1284476,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN IAD KUCUK 10</name>
+        <description><![CDATA[1793m²<br>49 990€ NON VIAB]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.6441532,47.6843136,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain IAD ALLARD 11</name>
+        <description><![CDATA[500m² <br>128000€ <br>2min du bord de loire]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.9224116,47.8994883,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN FNAIM 12</name>
+        <description><![CDATA[1200 m² // 20mL<br>Ass. indiv. // 35000€]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.0651509,48.1248138,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Bernard</name>
+        <description><![CDATA[1100m²<br>Non viab 60 000€]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.2307833,48.2036304,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain JOSE MARQUES</name>
+        <description><![CDATA[851m² Viab<br>45 000€]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.3252029,48.2291055,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Kunhia</name>
+        <description><![CDATA[75 000€<br>700 - 800m² <br>Hangar à démolir]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.8486118,47.9112929,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN VANESSA</name>
+        <description><![CDATA[3 LOTS<br>25 000 € + 1100m²]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.4789719,47.9160636,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain Vanessa</name>
+        <description><![CDATA[1070m²<br>86 000€]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.1440714,47.9286103,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain IAD</name>
+        <description><![CDATA[700m² Viab TAE ok <br>65 000 € Négo]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.3760065,48.1944053,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[TERRAIN 16 L'ADRESSE]]></name>
+        <description><![CDATA[97 000 € Viab <br>402m²]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.0097395,48.5323069,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terrain 15 MARC BAJEUX</name>
+        <description><![CDATA[157 500€ Viab<br>530m²]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            2.0103404,48.5284987,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TERRAIN 14 IAD SHOW</name>
+        <description><![CDATA[469m²<br>79 000 €]]></description>
+        <styleUrl>#icon-1848-880E4F</styleUrl>
+        <Point>
+          <coordinates>
+            1.9635618,48.4283314,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Recherche Client Sullivan</name>
+      <Placemark>
+        <name>Recherche TEXIER</name>
+        <description><![CDATA[350 500m²<br>20000 et 36000 € Viab + Notaire]]></description>
+        <styleUrl>#poly-9FA8DA-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.1374041,47.7950086,0
+                2.2108751,47.7899343,0
+                2.2325045,47.8466461,0
+                2.1823793,47.8464157,0
+                2.1391207,47.8595474,0
+                2.1765428,47.934818,0
+                2.1020418,47.9313676,0
+                2.074576,47.9026054,0
+                2.0732027,47.8279795,0
+                2.1374041,47.7950086,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche LAOUICHI</name>
+        <description>500m² 1000m²</description>
+        <styleUrl>#poly-FF5252-1200-59</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.7877187,47.9111829,0
+                1.4608506,47.7105733,0
+                1.5405075,47.6759071,0
+                1.8454013,47.8835587,0
+                1.7877187,47.9111829,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche Terrain</name>
+        <description><![CDATA[400 - 600 m²<br>110000€ notaire ]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.9936059,48.5382107,0
+                2.0045922,48.5131082,0
+                2.2762292,48.58965,0
+                2.3339074,48.6061794,0
+                2.3634332,48.6265159,0
+                2.3518975,48.6456647,0
+                2.2131951,48.6469803,0
+                2.2900308,48.6152138,0
+                1.9936059,48.5382107,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche DA SILVA </name>
+        <description><![CDATA[650 mini Pas de lotissement PAS DE VIS A VIS<br>30Min CHRO<br>1h20 Chartres<br>Pas de Centre Ville // Commodités // Ecoles Collège ]]></description>
+        <styleUrl>#poly-817717-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.6922273,47.8060829,0
+                1.6644869,47.7679755,0
+                1.725461,47.7493268,0
+                1.8284578,47.7367675,0
+                1.8163728,47.8538392,0
+                1.6762972,47.8427798,0
+                1.6765718,47.8175189,0
+                1.6922273,47.8060829,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Mme DIA</name>
+        <description><![CDATA[250 à 500m²<br>50 55k€ viab + Notaire]]></description>
+        <styleUrl>#poly-E65100-1200-43</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.9064036,47.8908986,0
+                1.8236831,47.9036706,0
+                1.7883217,47.8601539,0
+                1.6724532,47.7837385,0
+                1.7731981,47.6726641,0
+                1.9517187,47.740356,0
+                1.9064036,47.8908986,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche COURTAIS</name>
+        <description>1000m² mini</description>
+        <styleUrl>#poly-7CB342-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.5390018,47.7210368,0
+                2.3493234,47.6423387,0
+                2.393433,47.4849175,0
+                2.9526371,47.4024421,0
+                2.9057501,47.5711914,0
+                2.5390018,47.7210368,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche Liessens</name>
+        <description>400 600m² -50k€</description>
+        <styleUrl>#poly-E65100-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.093368,48.0261526,0
+                1.9986109,47.995835,0
+                2.0727686,47.9220338,0
+                2.1555094,47.9914697,0
+                2.093368,48.0261526,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Mme Philippeau</name>
+        <description><![CDATA[Terrain 350 600 m²<br>36900 € Notaire + Viab compris]]></description>
+        <styleUrl>#poly-3949AB-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.8919977,47.994913,0
+                2.1378429,47.8937129,0
+                2.3067758,47.9434175,0
+                2.2490916,48.0729772,0
+                1.9716572,48.1481745,0
+                1.7388593,48.1037114,0
+                1.6454656,48.0670119,0
+                1.6557819,47.996524,0
+                1.7223781,47.9967512,0
+                1.7625574,47.9636888,0
+                1.8919977,47.994913,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>recherche boucher</name>
+        <description>300-400m²</description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.3558263,48.3929534,0
+                2.3458699,48.3313636,0
+                2.4155644,48.3318201,0
+                2.5377873,48.3539551,0
+                2.4677495,48.4223533,0
+                2.3558263,48.3929534,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Recherche DA COSTA</name>
+        <description><![CDATA[400 et 600m²<br>60 000 € Viab + Notaire inc]]></description>
+        <styleUrl>#poly-CE93D8-1200-61</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.9494176,47.9032511,0
+                2.1475148,47.8661823,0
+                2.1591878,47.9287923,0
+                2.119019,48.0168244,0
+                2.0517277,48.0007462,0
+                2.0682072,47.9522516,0
+                2.0428013,47.9497221,0
+                2.0355916,47.9632875,0
+                1.9895863,47.9619081,0
+                1.9758534,47.9715629,0
+                1.8944859,47.9350031,0
+                1.9494176,47.9032511,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Mme LE GUENNEC PELLE</name>
+        <styleUrl>#poly-FBC02D-1200-54-nodesc</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                1.8964054,47.9568487,0
+                1.9828541,47.9594237,0
+                2.0156071,48.045797,0
+                1.7187015,48.0626872,0
+                1.6876652,48.053692,0
+                1.6698124,47.9982177,0
+                1.8964054,47.9568487,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>RECHERCHE DE ALMEIDA</name>
+        <description>min 350m²--500m²</description>
+        <styleUrl>#poly-FBC02D-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.2760768,48.5418355,0
+                2.3522945,48.391592,0
+                2.517776,48.3683329,0
+                2.463531,48.5266038,0
+                2.2760768,48.5418355,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>recherche calik</name>
+        <description><![CDATA[1000m²<br>39 000€ Viab et Not]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                2.215376,48.184378,0
+                2.1889401,48.1552988,0
+                2.1855069,48.1495725,0
+                2.1779707,48.1249398,0
+                2.2572614,48.0915874,0
+                2.2615501,48.1194309,0
+                2.2411139,48.1280196,0
+                2.2563022,48.135412,0
+                2.2611936,48.1340966,0
+                2.2701672,48.1275984,0
+                2.311409,48.1311783,0
+                2.2847272,48.1763657,0
+                2.2644712,48.1928468,0
+                2.215376,48.184378,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>LIMITE PROD</name>
+      <Placemark>
+        <name>LIMITE 91</name>
+        <styleUrl>#line-E65100-5263-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            2.0135012,48.5300489,0
+            2.4817934,48.3802266,0
+            2.0232192,48.5272142,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>Limite 28</name>
+        <styleUrl>#line-E65100-5844-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            1.3068284,48.0704197,0
+            1.8540849,48.286074,0
+            2.0135012,48.5300489,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>Limite 91</name>
+        <styleUrl>#line-E65100-4875-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            2.0135012,48.5300489,0
+            2.4817934,48.3802266,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>LIMITE 41</name>
+        <styleUrl>#line-E65100-6038-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            2.0523278,47.5822663,0
+            1.6513268,47.6183806,0
+            1.4686791,47.7043988,0
+            1.3656823,47.8842993,0
+            1.3068284,48.0704197,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

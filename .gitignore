@@ -1,0 +1,21 @@
+# Dependencies
+/laravel-api/vendor
+/react-front/node_modules
+/scraper/node_modules
+node_modules
+
+# Env / secrets
+.env
+*.env.local
+
+# Builds
+/react-front/dist
+/laravel-api/public/build
+
+# Laravel
+/laravel-api/storage/*.key
+/laravel-api/storage/framework/cache/*
+/laravel-api/storage/logs/*.log
+
+# OS
+.DS_Store

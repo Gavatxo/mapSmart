@@ -1,0 +1,25 @@
+# Infra de développement MapSmart.
+# PostGIS est requis ; Valhalla est optionnel (nécessaire pour les isochrones).
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: mapsmart
+      POSTGRES_USER: mapsmart
+      POSTGRES_PASSWORD: mapsmart
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # Isochrones (temps/distance). Nécessite un fichier .pbf OSM (voir doc Valhalla).
+  # Décommenter et fournir les tuiles pour activer le calcul de zones.
+  # valhalla:
+  #   image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+  #   ports:
+  #     - "8002:8002"
+  #   volumes:
+  #     - ./valhalla_tiles:/custom_files
+
+volumes:
+  db_data:

@@ -131,12 +131,15 @@ search_zones                  (zones A/B sauvegardées d'une carte)
   geom GEOGRAPHY(Polygon,4326),   -- isochrone calculée, en cache
   created_at
 
-dvf_transactions              (ingestion légale, partagée / non tenant-scoped)
-  id, geom GEOGRAPHY(Point,4326), date_mutation, valeur_fonciere,
-  type_local, surface, nb_pieces, commune_insee   -- index GIST + date
+dvf_mutations                 (ingestion légale, partagée / non tenant-scoped)
+  id_mutation PK, geom GEOMETRY(Point,4326), date_mutation, nature_mutation,
+  valeur_fonciere, type_local, categorie, surface_reelle_bati, surface_terrain,
+  nombre_pieces_principales, code_commune, code_departement, annee   -- index GIST + (categorie, date)
 
-cadastre_parcelles            (open data)
-  id, geom GEOGRAPHY(Polygon,4326), section, numero, commune_insee, surface
+cadastre_parcelles            (open data Etalab)
+  id (IDU) PK, geom GEOMETRY(MultiPolygon,4326), commune, section, numero, contenance
+
+public_dataset_imports        (journal d'ingestion : dataset, scope, version, rows)
 ```
 
 > Les tables **DVF/cadastre sont globales** (données publiques), pas scopées par tenant : on les ingère une fois et tous les comptes les interrogent.
@@ -151,7 +154,7 @@ WHERE t.tenant_id = :tenant
   AND ST_Within(t.geom::geometry, z.geom::geometry);
 
 -- Ventes DVF réelles dans un secteur dessiné (12 derniers mois)
-SELECT * FROM dvf_transactions
+SELECT * FROM dvf_mutations
 WHERE ST_Within(geom::geometry, ST_GeomFromGeoJSON(:polygon))
   AND date_mutation > now() - interval '12 months';
 ```
@@ -236,8 +239,8 @@ POST   /listings/search          [module opt.] annonces agrégées (worker)
 | Phase | Contenu | Résultat |
 |---|---|---|
 | **0. Juridique** (parallèle) | Validation avocat scraping + RGPD ; choix fond de carte | Go/No-go module portails |
-| **1. Socle** | Laravel + PostGIS + React/MapLibre ; auth multi-tenant ; import KML serveur ; isochrones Valhalla self-hosted ; géocodage BAN ; sauvegarde cartes/zones par compte | Le prototype devient une vraie app multi-utilisateurs |
-| **2. Valeur légale** | Ingestion DVF + cadastre ; affichage ventes réelles et parcelles par secteur | **Produit déjà vendable** « analyse de secteur » |
+| **1. Socle** ✅ | Laravel + PostGIS + React/MapLibre ; auth multi-tenant ; import KML serveur ; isochrones Valhalla self-hosted ; géocodage BAN ; sauvegarde cartes/zones par compte | Le prototype devient une vraie app multi-utilisateurs |
+| **2. Valeur légale** ✅ | Ingestion DVF + cadastre ; affichage ventes réelles et parcelles par secteur | **Produit déjà vendable** « analyse de secteur » |
 | **3. SaaS** | Facturation Stripe (Cashier), plans/quotas, rôles agence, dashboard | Commercialisable |
 | **4. Module portails** (si Go) | Worker Node/Playwright isolé, mode agrégateur/redirection, proxies, coupe-circuit | Bonus différenciant |
 

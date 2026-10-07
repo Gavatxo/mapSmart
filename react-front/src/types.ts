@@ -16,6 +16,30 @@ export type Zone = {
 
 export type ResultTerrain = { id: number; name: string; layer: string | null; geojson: Geometry }
 
+export type Bounds = [number, number, number, number] // west, south, east, north
+
+export type DvfCategory = 'maison' | 'appartement' | 'terrain' | 'local' | 'dependance' | 'autre'
+
+export type DvfStats = {
+  count: number
+  prix_median: number | null
+  truncated: boolean
+  categories: Partial<Record<DvfCategory, { count: number; prix_median: number | null; prix_m2_median: number | null }>>
+}
+
+export type DvfCollection = FeatureCollection & { source: 'base' | 'fichiers'; stats: DvfStats }
+
+export const DVF_CATEGORIES: { key: DvfCategory; label: string; color: string; unit: string }[] = [
+  { key: 'maison', label: 'Maisons', color: '#d1495b', unit: '€/m² bâti' },
+  { key: 'appartement', label: 'Appartements', color: '#8e44ad', unit: '€/m² bâti' },
+  { key: 'terrain', label: 'Terrains', color: '#2a9d8f', unit: '€/m² terrain' },
+  { key: 'local', label: 'Locaux', color: '#e76f51', unit: '' },
+  { key: 'dependance', label: 'Dépendances', color: '#7f8c8d', unit: '' },
+  { key: 'autre', label: 'Autres', color: '#b0b8c4', unit: '' },
+]
+
+export const EUR = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+
 export const EMPTY: FC = { type: 'FeatureCollection', features: [] }
 
 /** Premier sommet d'une géométrie : sert à centrer la carte sur un terrain. */

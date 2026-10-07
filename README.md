@@ -17,9 +17,9 @@ Croise **terrains de l'agence (KML)**, **données publiques légales (DVF, cadas
 
 ## Démarrage rapide
 
-### 1. Base de données (PostGIS)
+### 1. Base de données (PostGIS) + Redis (files d'attente)
 ```bash
-docker compose up -d db
+docker compose up -d db redis
 ```
 
 ### 2. API Laravel
@@ -40,7 +40,22 @@ npm run dev              # http://localhost:5173
 Ouvrir http://localhost:5173 → créer un compte → créer une carte → importer un KML
 (ex. `carte-terrains-agence-code/assets/terrain-agence.kml`).
 
-### 4. (Optionnel) Isochrones — Valhalla
+### 4. Données publiques (DVF + cadastre) — phase 2
+Les ventes DVF et les parcelles cadastrales sont chargées en base pour les départements
+de `MAPSMART_DEPARTEMENTS` (défaut : `45`). Les imports passent par la file `ingestion` :
+```bash
+cd laravel-api
+php artisan horizon                       # worker des files (tableau de bord : http://localhost:8000/horizon)
+php artisan mapsmart:import-dvf           # DVF 2021-2025 des départements configurés
+php artisan mapsmart:import-cadastre      # parcelles, commune par commune
+# variantes : mapsmart:import-dvf 45 41 --years=2025 --sync · mapsmart:import-cadastre --communes=45327 --sync
+php artisan schedule:work                 # rafraîchissements planifiés (DVF mensuel, cadastre trimestriel)
+```
+Ordre de grandeur (Loiret) : ~71 000 ventes DVF en quelques secondes, ~800 000 parcelles (~300 Mo) en ~1 min.
+Hors des zones chargées, les ventes DVF autour d'un point restent disponibles « à la volée »
+(fichiers geo-dvf de la commune).
+
+### 5. (Optionnel) Isochrones — Valhalla
 ```bash
 docker compose --profile routing up -d valhalla   # http://localhost:8002
 ```
@@ -69,6 +84,12 @@ En local `MAIL_MAILER=log` : le lien de réinitialisation est écrit dans
 - ✅ Zones de recherche : isochrone temps / distance (Valhalla) ou polygone dessiné ;
   renommage, suppression, rechargement ; terrains compatibles = intersection des zones (`ST_Within`)
 - ✅ DVF (ventes réelles) autour d'un point — fichiers geo-dvf officiels
+
+## Phase 2 — valeur légale
+- ✅ Ingestion DVF + cadastre en PostGIS (commandes artisan, jobs Horizon, planification, idempotente)
+- ✅ Ventes DVF **dans les zones** (intersection) ou autour du départ, filtres catégorie / période
+- ✅ Synthèse : nombre de ventes, prix médian, prix médian au m² (bâti / terrain) par catégorie
+- ✅ Couche cadastre (à fort zoom) + référence de parcelle dans la fiche d'un terrain
 - ⏳ Module portails immo : squelette désactivé (validation juridique requise)
 
 ## Rappel juridique

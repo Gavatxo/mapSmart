@@ -16,19 +16,4 @@ class GeoController extends Controller
 
         return response()->json($this->geo->geocode($data['q']));
     }
-
-    /** Ventes DVF (open data) autour d'un point. */
-    public function dvf(Request $request)
-    {
-        $data = $request->validate([
-            'lng' => ['required', 'numeric'],
-            'lat' => ['required', 'numeric'],
-            'dist' => ['nullable', 'integer', 'min:50', 'max:5000'],
-        ]);
-
-        return response()->json([
-            'type' => 'FeatureCollection',
-            'features' => $this->geo->dvf($data['lng'], $data['lat'], $data['dist'] ?? 500),
-        ]);
-    }
 }

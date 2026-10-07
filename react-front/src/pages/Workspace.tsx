@@ -1,14 +1,16 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
+import CoverageNote from '../dvf/CoverageNote'
+import DvfPanel from '../dvf/DvfPanel'
 import LayersPanel from '../layers/LayersPanel'
 import MapView from '../map/MapView'
 import Section from '../ui/Section'
 import { s } from '../ui/styles'
 import MapsPanel from '../workspace/MapsPanel'
 import ZonesPanel from '../zones/ZonesPanel'
-import { EMPTY, firstCoord, type FC, type LngLat, type MapItem, type ResultTerrain, type ViewState, type Zone } from '../types'
+import { EMPTY, firstCoord, type Bounds, type FC, type LngLat, type MapItem, type ResultTerrain, type ViewState, type Zone } from '../types'
 
 export default function Workspace() {
   const { user, logout } = useAuth()
@@ -20,8 +22,9 @@ export default function Workspace() {
   const [origin, setOrigin] = useState<LngLat | null>(null)
   const [draft, setDraft] = useState<LngLat[] | null>(null)
   const [hiddenLayers, setHiddenLayers] = useState<Set<string>>(new Set())
-  const [dvfRadius, setDvfRadius] = useState(500)
   const [dvf, setDvf] = useState<FC>(EMPTY)
+  const [showCadastre, setShowCadastre] = useState(false)
+  const [viewport, setViewport] = useState<{ zoom: number; bounds: Bounds } | null>(null)
   const [fitKey, setFitKey] = useState(0)
   const [focus, setFocus] = useState<{ center: LngLat; key: number } | null>(null)
   const [status, setStatus] = useState('')
@@ -69,23 +72,22 @@ export default function Workspace() {
     onError: (e: any) => setStatus(e.response?.data?.message ?? 'Import KML échoué.'),
   })
 
-  const loadDvf = useMutation({
-    mutationFn: async () => {
-      if (!origin) throw new Error('origin')
-      const [lng, lat] = origin
-      return (await api.get<FC>('/dvf', { params: { lng, lat, dist: dvfRadius } })).data
-    },
-    onMutate: () => setStatus('Chargement des ventes DVF…'),
-    onSuccess: (data) => {
-      setDvf(data)
-      setStatus(`${data.features.length} ventes DVF dans un rayon de ${dvfRadius} m.`)
-    },
-    onError: () => setStatus('Données DVF indisponibles.'),
+  // Cadastre : chargé par emprise visible, uniquement à fort zoom (volume).
+  const cadastreBbox = showCadastre && viewport && viewport.zoom >= CADASTRE_MIN_ZOOM
+    ? viewport.bounds.map((v) => v.toFixed(4)).join(',')
+    : null
+  const cadastre = useQuery({
+    queryKey: ['cadastre', cadastreBbox],
+    enabled: !!cadastreBbox,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60_000,
+    queryFn: async () => (await api.get<FC>('/cadastre', { params: { bbox: cadastreBbox } })).data,
   })
+
+  const onDvf = useCallback((fc: FC) => setDvf(fc), [])
 
   function selectMap(id: number | null) {
     setMapId(id)
-    setDvf(EMPTY)
     setDraft(null)
     setOrigin(null)
     setHiddenLayers(new Set())
@@ -93,7 +95,8 @@ export default function Workspace() {
   }
 
   // Sauvegarde du cadrage (débounce) : la carte se rouvre là où on l'a laissée.
-  function saveView(view: ViewState) {
+  function saveView(view: ViewState, bounds: Bounds) {
+    setViewport({ zoom: view.zoom, bounds })
     window.clearTimeout(saveViewTimer.current)
     const id = mapId
     saveViewTimer.current = window.setTimeout(() => {
@@ -179,16 +182,19 @@ export default function Workspace() {
               )}
             </Section>
 
-            <Section title="Ventes réelles (DVF)">
-              <div style={s.row}>
-                <select style={{ ...s.field, flex: 1 }} value={dvfRadius} onChange={(e) => setDvfRadius(Number(e.target.value))}>
-                  {[250, 500, 1000, 2000, 5000].map((r) => <option key={r} value={r}>Rayon {r} m</option>)}
-                </select>
-                <button style={s.secondary} disabled={!origin || loadDvf.isPending} onClick={() => loadDvf.mutate()}>Afficher</button>
-              </div>
-              <p style={s.muted}>Autour du point de départ</p>
-              {dvf.features.length > 0 && <button style={s.ghost} onClick={() => setDvf(EMPTY)}>Masquer les ventes</button>}
+            <DvfPanel mapId={mapId} hasZones={hasZones} origin={origin} onFeatures={onDvf}
+              zonesKey={(zones.data ?? []).map((z) => z.id).join(',')} />
+
+            <Section title="Cadastre">
+              <label style={{ ...s.row, fontSize: 14, cursor: 'pointer' }}>
+                <input type="checkbox" checked={showCadastre} onChange={(e) => setShowCadastre(e.target.checked)} />
+                Afficher les parcelles
+              </label>
+              {showCadastre && (viewport?.zoom ?? 0) < CADASTRE_MIN_ZOOM && <p style={s.muted}>Zoomez sur la carte pour voir les parcelles.</p>}
+              {cadastre.isError && <p style={{ ...s.muted, color: '#dc4c58' }}>Cadastre indisponible pour cette emprise.</p>}
             </Section>
+
+            <CoverageNote />
           </>
         )}
 
@@ -197,7 +203,8 @@ export default function Workspace() {
 
       <main style={layout.main}>
         {mapId && currentMap
-          ? <MapView key={mapId} terrains={terrainData} zones={zoneData} dvf={dvf} origin={origin} draft={draft}
+          ? <MapView key={mapId} terrains={terrainData} zones={zoneData} dvf={dvf}
+              cadastre={cadastreBbox ? cadastre.data ?? EMPTY : EMPTY} origin={origin} draft={draft}
               initialView={currentMap.view_state} fitKey={fitKey} focus={focus}
               onMapClick={onMapClick} onViewChange={saveView} />
           : <div style={layout.empty}>Sélectionnez ou créez une carte pour commencer.</div>}
@@ -205,6 +212,8 @@ export default function Workspace() {
     </div>
   )
 }
+
+const CADASTRE_MIN_ZOOM = 15
 
 const layout: Record<string, React.CSSProperties> = {
   app: { display: 'grid', gridTemplateColumns: '340px 1fr', gridTemplateRows: '56px 1fr', height: '100vh' },

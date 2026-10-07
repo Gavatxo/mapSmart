@@ -23,7 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Contenu d'une carte
     Route::get('/maps/{map}/terrains', [TerrainController::class, 'index']);
     Route::post('/maps/{map}/imports', [ImportController::class, 'store']);
+    Route::get('/maps/{map}/zones', [ZoneController::class, 'index']);
     Route::post('/maps/{map}/zones', [ZoneController::class, 'store']);
+    Route::delete('/maps/{map}/zones', [ZoneController::class, 'clear']);
     Route::get('/maps/{map}/results', [ZoneController::class, 'results']);
     Route::delete('/zones/{zone}', [ZoneController::class, 'destroy']);
 

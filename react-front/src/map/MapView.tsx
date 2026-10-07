@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as maplibregl from 'maplibre-gl'
 import type { FeatureCollection, Geometry } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -22,12 +22,16 @@ const EMPTY: FeatureCollection = { type: 'FeatureCollection', features: [] }
 type Props = {
   terrains: FeatureCollection
   zones: FeatureCollection
+  dvf: FeatureCollection
   onMapClick?: (lngLat: { lng: number; lat: number }) => void
 }
 
-export default function MapView({ terrains, zones, onMapClick }: Props) {
+export default function MapView({ terrains, zones, dvf, onMapClick }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
+  // Les sources n'existent qu'après 'load' : les effets de données attendent ce signal,
+  // sinon des données déjà en cache (arrivées avant le chargement) ne s'afficheraient jamais.
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     if (!container.current || map.current) return
@@ -42,6 +46,7 @@ export default function MapView({ terrains, zones, onMapClick }: Props) {
     m.on('load', () => {
       m.addSource('terrains', { type: 'geojson', data: EMPTY })
       m.addSource('zones', { type: 'geojson', data: EMPTY })
+      m.addSource('dvf', { type: 'geojson', data: EMPTY })
 
       m.addLayer({
         id: 'zones-fill', type: 'fill', source: 'zones',
@@ -72,20 +77,46 @@ export default function MapView({ terrains, zones, onMapClick }: Props) {
         },
       })
 
+      m.addLayer({
+        id: 'dvf-point', type: 'circle', source: 'dvf',
+        paint: {
+          'circle-radius': 5,
+          'circle-color': '#d1495b',
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 1.5,
+        },
+      })
+
       m.on('click', 'terrains-point', (e: maplibregl.MapLayerMouseEvent) => {
         const p = e.features?.[0]?.properties
         if (!p) return
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`<strong>${p.name ?? ''}</strong><br/>${p.description ?? p.layer ?? ''}`)
+          .setHTML(`<strong>${esc(p.name)}</strong><br/>${esc(p.description ?? p.layer)}`)
+          .addTo(m)
+      })
+      m.on('click', 'dvf-point', (e: maplibregl.MapLayerMouseEvent) => {
+        const p = e.features?.[0]?.properties
+        if (!p) return
+        const prix = p.valeur_fonciere != null ? EUR.format(p.valeur_fonciere) : 'prix non renseigné'
+        const details = [
+          p.type_local,
+          p.surface_reelle_bati > 0 && `${p.surface_reelle_bati} m² bâtis`,
+          p.surface_terrain > 0 && `${p.surface_terrain} m² terrain`,
+        ].filter(Boolean).join(' · ')
+        new maplibregl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`<strong>${esc(prix)}</strong> — ${esc(p.nature_mutation)} du ${esc(p.date_mutation)}<br/>${esc(details)}<br/><small>${esc(p.adresse)}</small>`)
           .addTo(m)
       })
       map.current = m
+      setReady(true)
     })
 
     return () => {
       m.remove()
       map.current = null
+      setReady(false)
     }
   }, [])
 
@@ -98,7 +129,7 @@ export default function MapView({ terrains, zones, onMapClick }: Props) {
     return () => {
       m.off('click', handler)
     }
-  }, [onMapClick])
+  }, [ready, onMapClick])
 
   // Met à jour les terrains + recadre.
   useEffect(() => {
@@ -116,15 +147,28 @@ export default function MapView({ terrains, zones, onMapClick }: Props) {
       })
     }
     if (has) m.fitBounds(b, { padding: 40, maxZoom: 15, duration: 0 })
-  }, [terrains])
+  }, [ready, terrains])
 
   // Met à jour les zones.
   useEffect(() => {
     const src = map.current?.getSource('zones') as maplibregl.GeoJSONSource | undefined
     src?.setData(zones)
-  }, [zones])
+  }, [ready, zones])
+
+  // Met à jour les ventes DVF.
+  useEffect(() => {
+    const src = map.current?.getSource('dvf') as maplibregl.GeoJSONSource | undefined
+    src?.setData(dvf)
+  }, [ready, dvf])
 
   return <div ref={container} style={{ position: 'absolute', inset: 0 }} />
+}
+
+const EUR = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+
+// Les propriétés viennent de fichiers importés : on échappe avant d'injecter dans le HTML du popup.
+function esc(v: unknown): string {
+  return String(v ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 }
 
 function forEachCoord(geom: Geometry, cb: (c: number[]) => void) {

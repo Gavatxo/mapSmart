@@ -13,6 +13,12 @@ class ZoneController extends Controller
 {
     public function __construct(private GeoServices $geo) {}
 
+    /** Zones sauvegardées d'une carte (rechargées à l'ouverture de la carte). */
+    public function index(Map $map)
+    {
+        return SearchZone::where('map_id', $map->id)->oldest()->get();
+    }
+
     /**
      * Crée une zone de recherche.
      * - time/distance : calcule l'isochrone via Valhalla.
@@ -23,7 +29,7 @@ class ZoneController extends Controller
         $data = $request->validate([
             'label' => ['nullable', 'string', 'max:255'],
             'mode' => ['required', 'in:time,distance,polygon'],
-            'value' => ['nullable', 'numeric', 'min:1', 'max:180'],
+            'value' => ['required_unless:mode,polygon', 'nullable', 'numeric', 'min:1', 'max:180'],
             'origin' => ['nullable', 'array', 'size:2'], // [lng, lat]
             'geojson' => ['nullable', 'array'],
         ]);
@@ -60,6 +66,14 @@ class ZoneController extends Controller
     public function destroy(SearchZone $zone)
     {
         $zone->delete();
+
+        return response()->noContent();
+    }
+
+    /** Supprime toutes les zones d'une carte (bouton « Réinitialiser les zones »). */
+    public function clear(Map $map)
+    {
+        SearchZone::where('map_id', $map->id)->delete();
 
         return response()->noContent();
     }

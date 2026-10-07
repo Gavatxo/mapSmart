@@ -1,11 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { FeatureCollection } from 'geojson'
+import type { FeatureCollection, Geometry } from 'geojson'
 import { api } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 import MapView from '../map/MapView'
 
 type MapItem = { id: number; name: string }
+type Zone = { id: number; geojson: Geometry | null }
 type FC = FeatureCollection
 
 const EMPTY: FC = { type: 'FeatureCollection', features: [] }
@@ -20,7 +21,8 @@ export default function Workspace() {
   const [mode, setMode] = useState<'time' | 'distance'>('time')
   const [value, setValue] = useState(30)
   const [address, setAddress] = useState('')
-  const [zones, setZones] = useState<FC>(EMPTY)
+  const [dvfRadius, setDvfRadius] = useState(500)
+  const [dvf, setDvf] = useState<FC>(EMPTY)
   const [status, setStatus] = useState('')
 
   const maps = useQuery({
@@ -34,8 +36,15 @@ export default function Workspace() {
     queryFn: async () => (await api.get<FC>(`/maps/${mapId}/terrains`)).data,
   })
 
+  // Zones persistées côté serveur : rechargées à l'ouverture de la carte.
+  const zones = useQuery({
+    queryKey: ['zones', mapId],
+    enabled: !!mapId,
+    queryFn: async () => (await api.get<Zone[]>(`/maps/${mapId}/zones`)).data,
+  })
+
   const results = useQuery({
-    queryKey: ['results', mapId, zones.features.length],
+    queryKey: ['results', mapId],
     enabled: !!mapId,
     queryFn: async () => (await api.get(`/maps/${mapId}/results`)).data,
   })
@@ -44,7 +53,7 @@ export default function Workspace() {
     mutationFn: async (name: string) => (await api.post('/maps', { name })).data,
     onSuccess: (m) => {
       qc.invalidateQueries({ queryKey: ['maps'] })
-      setMapId(m.id)
+      selectMap(m.id)
     },
   })
 
@@ -67,15 +76,36 @@ export default function Workspace() {
       if (!origin) throw new Error('origin')
       return (await api.post(`/maps/${mapId}/zones`, { mode, value, origin })).data
     },
-    onSuccess: (zone) => {
-      setZones((z) => ({
-        type: 'FeatureCollection',
-        features: [...z.features, { type: 'Feature', geometry: zone.geojson, properties: {} }],
-      }))
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['zones', mapId] })
       qc.invalidateQueries({ queryKey: ['results', mapId] })
       setStatus('Zone calculée.')
     },
     onError: () => setStatus('Calcul de zone indisponible (Valhalla requis).'),
+  })
+
+  const clearZones = useMutation({
+    mutationFn: async () => api.delete(`/maps/${mapId}/zones`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['zones', mapId] })
+      qc.invalidateQueries({ queryKey: ['results', mapId] })
+      setStatus('Zones supprimées.')
+    },
+    onError: () => setStatus('Suppression des zones échouée.'),
+  })
+
+  const loadDvf = useMutation({
+    mutationFn: async () => {
+      if (!origin) throw new Error('origin')
+      const [lng, lat] = origin
+      return (await api.get<FC>('/dvf', { params: { lng, lat, dist: dvfRadius } })).data
+    },
+    onMutate: () => setStatus('Chargement des ventes DVF…'),
+    onSuccess: (data) => {
+      setDvf(data)
+      setStatus(`${data.features.length} ventes DVF dans un rayon de ${dvfRadius} m.`)
+    },
+    onError: () => setStatus('Données DVF indisponibles.'),
   })
 
   async function geocode() {
@@ -91,6 +121,17 @@ export default function Workspace() {
   }
 
   const terrainData = useMemo(() => terrains.data ?? EMPTY, [terrains.data])
+  const zoneData = useMemo<FC>(() => ({
+    type: 'FeatureCollection',
+    features: (zones.data ?? [])
+      .filter((z) => z.geojson)
+      .map((z) => ({ type: 'Feature', geometry: z.geojson!, properties: { id: z.id } })),
+  }), [zones.data])
+
+  function selectMap(id: number | null) {
+    setMapId(id)
+    setDvf(EMPTY)
+  }
 
   return (
     <div style={s.app}>
@@ -103,7 +144,7 @@ export default function Workspace() {
 
       <aside style={s.aside}>
         <Section title="Cartes">
-          <select style={s.field} value={mapId ?? ''} onChange={(e) => setMapId(Number(e.target.value) || null)}>
+          <select style={s.field} value={mapId ?? ''} onChange={(e) => selectMap(Number(e.target.value) || null)}>
             <option value="">— choisir une carte —</option>
             {maps.data?.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
           </select>
@@ -140,7 +181,25 @@ export default function Workspace() {
               <button style={s.primary} disabled={!origin || createZone.isPending} onClick={() => createZone.mutate()}>
                 Calculer la zone
               </button>
-              <button style={s.ghost} onClick={() => setZones(EMPTY)}>Réinitialiser les zones</button>
+              <button style={s.ghost} disabled={!zoneData.features.length || clearZones.isPending}
+                onClick={() => clearZones.mutate()}>
+                Réinitialiser les zones ({zoneData.features.length})
+              </button>
+            </Section>
+
+            <Section title="Ventes réelles (DVF)">
+              <div style={s.row}>
+                <select style={{ ...s.field, flex: 1 }} value={dvfRadius} onChange={(e) => setDvfRadius(Number(e.target.value))}>
+                  {[250, 500, 1000, 2000, 5000].map((r) => <option key={r} value={r}>Rayon {r} m</option>)}
+                </select>
+                <button style={s.secondary} disabled={!origin || loadDvf.isPending} onClick={() => loadDvf.mutate()}>
+                  Afficher
+                </button>
+              </div>
+              <p style={s.muted}>Autour du point de départ · ventes 2024–2025 de la commune</p>
+              {dvf.features.length > 0 && (
+                <button style={s.ghost} onClick={() => setDvf(EMPTY)}>Masquer les ventes</button>
+              )}
             </Section>
 
             <Section title="Résultats">
@@ -154,7 +213,7 @@ export default function Workspace() {
 
       <main style={s.main}>
         {mapId
-          ? <MapView terrains={terrainData} zones={zones} onMapClick={({ lng, lat }) => {
+          ? <MapView terrains={terrainData} zones={zoneData} dvf={dvf} onMapClick={({ lng, lat }) => {
               setOrigin([lng, lat]); setStatus('Point de départ placé.')
             }} />
           : <div style={s.empty}>Sélectionnez ou créez une carte pour commencer.</div>}

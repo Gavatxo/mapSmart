@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api/client'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import Logo from '../components/Logo'
 import CoverageNote from '../dvf/CoverageNote'
 import DvfPanel from '../dvf/DvfPanel'
 import LayersPanel from '../layers/LayersPanel'
@@ -137,7 +139,7 @@ export default function Workspace() {
   return (
     <div style={layout.app}>
       <header style={layout.header}>
-        <strong>MapSmart</strong>
+        <Link to="/" aria-label="MapSmart, accueil"><Logo size={28} light /></Link>
         <span style={{ flex: 1 }} />
         <span style={{ ...s.muted, color: '#c5d0de' }}>{user?.name}</span>
         <button style={{ ...s.ghost, color: '#c5d0de' }} onClick={logout}>Déconnexion</button>

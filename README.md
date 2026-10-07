@@ -40,18 +40,35 @@ npm run dev              # http://localhost:5173
 Ouvrir http://localhost:5173 → créer un compte → créer une carte → importer un KML
 (ex. `carte-terrains-agence-code/assets/terrain-agence.kml`).
 
-### 4. (Optionnel) Isochrones
-Le calcul des zones temps/distance nécessite une instance **Valhalla** auto-hébergée
-(voir le service commenté dans `docker-compose.yml`). Sans elle, l'import KML,
-les filtres, DVF et le tracé de zones à la main fonctionnent.
+### 4. (Optionnel) Isochrones — Valhalla
+```bash
+docker compose --profile routing up -d valhalla   # http://localhost:8002
+```
+Au premier lancement, le conteneur télécharge l'extrait OSM (région Centre-Val de Loire
+par défaut, variable `VALHALLA_PBF_URLS`) et construit les tuiles dans `valhalla_tiles/`
+(quelques minutes). Sans Valhalla, l'import KML, les polygones dessinés et DVF fonctionnent.
+
+### Tests
+```bash
+cd laravel-api
+composer test            # SQLite en mémoire (rapide)
+composer test:postgis    # + requêtes spatiales réelles sur la base mapsmart_test
+```
+`mapsmart_test` se crée une fois : `docker compose exec db psql -U mapsmart -c "CREATE DATABASE mapsmart_test"`.
+
+### Emails (mot de passe oublié)
+En local `MAIL_MAILER=log` : le lien de réinitialisation est écrit dans
+`laravel-api/storage/logs/laravel.log`.
 
 ## Fonctionnel disponible (v1 socle)
-- ✅ Comptes utilisateurs multi-tenant (chaque compte = ses cartes, ses données)
-- ✅ Import KML côté serveur → terrains stockés en PostGIS
-- ✅ Affichage carte MapLibre (points / polygones / lignes)
+- ✅ Comptes multi-tenant, réinitialisation du mot de passe, limitation des tentatives de connexion
+- ✅ Cartes : création, renommage, suppression, cadrage sauvegardé
+- ✅ Import KML côté serveur (Placemarks avec ou sans Folder, DTD refusées) → PostGIS
+- ✅ Affichage MapLibre (points / polygones / lignes) + filtre par calque
 - ✅ Géocodage d'adresse (BAN)
-- ✅ Zones de recherche (isochrone Valhalla) + filtrage des terrains dans les zones (PostGIS `ST_Within`)
-- ✅ DVF (ventes réelles) — proxy open data
+- ✅ Zones de recherche : isochrone temps / distance (Valhalla) ou polygone dessiné ;
+  renommage, suppression, rechargement ; terrains compatibles = intersection des zones (`ST_Within`)
+- ✅ DVF (ventes réelles) autour d'un point — fichiers geo-dvf officiels
 - ⏳ Module portails immo : squelette désactivé (validation juridique requise)
 
 ## Rappel juridique

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import * as maplibregl from 'maplibre-gl'
-import type { FeatureCollection, Geometry } from 'geojson'
+import type { Feature, FeatureCollection, Geometry } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import type { LngLat, ViewState } from '../types'
 
 // Fond OSM en tuiles raster : aucune clé API requise (à remplacer par MapTiler/IGN en prod).
 const OSM_STYLE: maplibregl.StyleSpecification = {
@@ -18,73 +19,87 @@ const OSM_STYLE: maplibregl.StyleSpecification = {
 }
 
 const EMPTY: FeatureCollection = { type: 'FeatureCollection', features: [] }
+const DEFAULT_VIEW: ViewState = { center: [2.12, 47.98], zoom: 9 }
+
+// Terrain hors des zones (properties.compatible === false) : grisé.
+const OUTSIDE: maplibregl.ExpressionSpecification = ['==', ['get', 'compatible'], false]
 
 type Props = {
   terrains: FeatureCollection
   zones: FeatureCollection
   dvf: FeatureCollection
-  onMapClick?: (lngLat: { lng: number; lat: number }) => void
+  origin: LngLat | null
+  draft: LngLat[] | null
+  /** Cadrage sauvegardé de la carte ; sans lui, on cadre sur les terrains au premier chargement. */
+  initialView: ViewState | null
+  /** Incrémenter pour recadrer sur les terrains (ex. après un import). */
+  fitKey: number
+  /** Centrer la carte sur un point (key pour re-déclencher sur le même point). */
+  focus: { center: LngLat; key: number } | null
+  onMapClick?: (lngLat: LngLat) => void
+  onViewChange?: (view: ViewState) => void
 }
 
-export default function MapView({ terrains, zones, dvf, onMapClick }: Props) {
+export default function MapView(props: Props) {
+  const { terrains, zones, dvf, origin, draft, initialView, fitKey, focus } = props
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   // Les sources n'existent qu'après 'load' : les effets de données attendent ce signal,
   // sinon des données déjà en cache (arrivées avant le chargement) ne s'afficheraient jamais.
   const [ready, setReady] = useState(false)
+  // Callbacks lus via ref : les handlers MapLibre sont posés une seule fois.
+  const callbacks = useRef(props)
+  callbacks.current = props
+  const lastFit = useRef<number | null>(initialView ? fitKey : null)
 
   useEffect(() => {
     if (!container.current || map.current) return
-    const m = new maplibregl.Map({
-      container: container.current,
-      style: OSM_STYLE,
-      center: [2.12, 47.98],
-      zoom: 9,
-    })
+    const view = initialView ?? DEFAULT_VIEW
+    const m = new maplibregl.Map({ container: container.current, style: OSM_STYLE, center: view.center, zoom: view.zoom })
     m.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+    m.doubleClickZoom.disable() // le double-clic sert au dessin de polygone
 
     m.on('load', () => {
-      m.addSource('terrains', { type: 'geojson', data: EMPTY })
-      m.addSource('zones', { type: 'geojson', data: EMPTY })
-      m.addSource('dvf', { type: 'geojson', data: EMPTY })
+      for (const id of ['terrains', 'zones', 'dvf', 'origin', 'draft']) m.addSource(id, { type: 'geojson', data: EMPTY })
 
+      m.addLayer({ id: 'zones-fill', type: 'fill', source: 'zones', paint: { 'fill-color': '#1769e0', 'fill-opacity': 0.12 } })
+      m.addLayer({ id: 'zones-line', type: 'line', source: 'zones', paint: { 'line-color': '#1769e0', 'line-width': 2 } })
       m.addLayer({
-        id: 'zones-fill', type: 'fill', source: 'zones',
-        paint: { 'fill-color': '#1769e0', 'fill-opacity': 0.15 },
+        id: 'terrains-poly', type: 'fill', source: 'terrains', filter: ['==', ['geometry-type'], 'Polygon'],
+        paint: { 'fill-color': ['case', OUTSIDE, '#9aa5b4', '#7755cf'], 'fill-opacity': 0.15 },
       })
       m.addLayer({
-        id: 'zones-line', type: 'line', source: 'zones',
-        paint: { 'line-color': '#1769e0', 'line-width': 2 },
+        id: 'terrains-line', type: 'line', source: 'terrains', filter: ['==', ['geometry-type'], 'LineString'],
+        paint: { 'line-color': ['case', OUTSIDE, '#9aa5b4', '#293a5f'], 'line-width': 2, 'line-dasharray': [2, 1] },
       })
       m.addLayer({
-        id: 'terrains-poly', type: 'fill', source: 'terrains',
-        filter: ['==', ['geometry-type'], 'Polygon'],
-        paint: { 'fill-color': '#7755cf', 'fill-opacity': 0.1 },
+        id: 'dvf-point', type: 'circle', source: 'dvf',
+        paint: { 'circle-radius': 5, 'circle-color': '#d1495b', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 },
       })
       m.addLayer({
-        id: 'terrains-line', type: 'line', source: 'terrains',
-        filter: ['==', ['geometry-type'], 'LineString'],
-        paint: { 'line-color': '#293a5f', 'line-width': 2, 'line-dasharray': [2, 1] },
-      })
-      m.addLayer({
-        id: 'terrains-point', type: 'circle', source: 'terrains',
-        filter: ['==', ['geometry-type'], 'Point'],
+        id: 'terrains-point', type: 'circle', source: 'terrains', filter: ['==', ['geometry-type'], 'Point'],
         paint: {
-          'circle-radius': 6,
-          'circle-color': '#e2ad16',
+          'circle-radius': ['case', OUTSIDE, 4, 6],
+          'circle-color': ['case', OUTSIDE, '#9aa5b4', '#e2ad16'],
           'circle-stroke-color': '#fff',
           'circle-stroke-width': 2,
         },
       })
-
       m.addLayer({
-        id: 'dvf-point', type: 'circle', source: 'dvf',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': '#d1495b',
-          'circle-stroke-color': '#fff',
-          'circle-stroke-width': 1.5,
-        },
+        id: 'draft-fill', type: 'fill', source: 'draft', filter: ['==', ['geometry-type'], 'Polygon'],
+        paint: { 'fill-color': '#0e9f6e', 'fill-opacity': 0.15 },
+      })
+      m.addLayer({
+        id: 'draft-line', type: 'line', source: 'draft', filter: ['!=', ['geometry-type'], 'Point'],
+        paint: { 'line-color': '#0e9f6e', 'line-width': 2, 'line-dasharray': [2, 1] },
+      })
+      m.addLayer({
+        id: 'draft-point', type: 'circle', source: 'draft', filter: ['==', ['geometry-type'], 'Point'],
+        paint: { 'circle-radius': 4, 'circle-color': '#fff', 'circle-stroke-color': '#0e9f6e', 'circle-stroke-width': 2 },
+      })
+      m.addLayer({
+        id: 'origin-point', type: 'circle', source: 'origin',
+        paint: { 'circle-radius': 7, 'circle-color': '#1769e0', 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 },
       })
 
       m.on('click', 'terrains-point', (e: maplibregl.MapLayerMouseEvent) => {
@@ -92,7 +107,7 @@ export default function MapView({ terrains, zones, dvf, onMapClick }: Props) {
         if (!p) return
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`<strong>${esc(p.name)}</strong><br/>${esc(p.description ?? p.layer)}`)
+          .setHTML(`<strong>${esc(p.name)}</strong><br/>${esc(p.description || p.layer)}`)
           .addTo(m)
       })
       m.on('click', 'dvf-point', (e: maplibregl.MapLayerMouseEvent) => {
@@ -109,6 +124,12 @@ export default function MapView({ terrains, zones, dvf, onMapClick }: Props) {
           .setHTML(`<strong>${esc(prix)}</strong> — ${esc(p.nature_mutation)} du ${esc(p.date_mutation)}<br/>${esc(details)}<br/><small>${esc(p.adresse)}</small>`)
           .addTo(m)
       })
+      m.on('click', (e) => callbacks.current.onMapClick?.([e.lngLat.lng, e.lngLat.lat]))
+      m.on('moveend', () => {
+        const c = m.getCenter()
+        callbacks.current.onViewChange?.({ center: [round(c.lng), round(c.lat)], zoom: Math.round(m.getZoom() * 100) / 100 })
+      })
+
       map.current = m
       setReady(true)
     })
@@ -118,51 +139,55 @@ export default function MapView({ terrains, zones, dvf, onMapClick }: Props) {
       map.current = null
       setReady(false)
     }
+    // La carte est créée une seule fois par montage (le parent remonte le composant par carte).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Clic carte (placer un départ de zone)
-  useEffect(() => {
-    const m = map.current
-    if (!m || !onMapClick) return
-    const handler = (e: maplibregl.MapMouseEvent) => onMapClick({ lng: e.lngLat.lng, lat: e.lngLat.lat })
-    m.on('click', handler)
-    return () => {
-      m.off('click', handler)
-    }
-  }, [ready, onMapClick])
-
-  // Met à jour les terrains + recadre.
+  // Terrains + cadrage automatique (premier chargement sans vue sauvegardée, ou fitKey incrémenté).
   useEffect(() => {
     const m = map.current
     const src = m?.getSource('terrains') as maplibregl.GeoJSONSource | undefined
     if (!m || !src) return
     src.setData(terrains)
 
+    if (lastFit.current === fitKey || !terrains.features.length) return
     const b = new maplibregl.LngLatBounds()
-    let has = false
-    for (const f of terrains.features) {
-      forEachCoord(f.geometry, ([lng, lat]) => {
-        b.extend([lng, lat])
-        has = true
-      })
-    }
-    if (has) m.fitBounds(b, { padding: 40, maxZoom: 15, duration: 0 })
-  }, [ready, terrains])
+    for (const f of terrains.features) forEachCoord(f.geometry, ([lng, lat]) => b.extend([lng, lat]))
+    m.fitBounds(b, { padding: 40, maxZoom: 15, duration: 0 })
+    lastFit.current = fitKey
+  }, [ready, terrains, fitKey])
 
-  // Met à jour les zones.
-  useEffect(() => {
-    const src = map.current?.getSource('zones') as maplibregl.GeoJSONSource | undefined
-    src?.setData(zones)
-  }, [ready, zones])
+  useEffect(() => setSource(map.current, 'zones', zones), [ready, zones])
+  useEffect(() => setSource(map.current, 'dvf', dvf), [ready, dvf])
 
-  // Met à jour les ventes DVF.
   useEffect(() => {
-    const src = map.current?.getSource('dvf') as maplibregl.GeoJSONSource | undefined
-    src?.setData(dvf)
-  }, [ready, dvf])
+    setSource(map.current, 'origin', {
+      type: 'FeatureCollection',
+      features: origin ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: origin }, properties: {} }] : [],
+    })
+  }, [ready, origin])
+
+  useEffect(() => {
+    const pts = draft ?? []
+    const features: Feature[] = pts.map((c) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: c }, properties: {} }))
+    if (pts.length >= 3) features.push({ type: 'Feature', geometry: { type: 'Polygon', coordinates: [[...pts, pts[0]]] }, properties: {} })
+    else if (pts.length === 2) features.push({ type: 'Feature', geometry: { type: 'LineString', coordinates: pts }, properties: {} })
+    setSource(map.current, 'draft', { type: 'FeatureCollection', features })
+    map.current?.getCanvas().style.setProperty('cursor', draft ? 'crosshair' : '')
+  }, [ready, draft])
+
+  useEffect(() => {
+    if (focus) map.current?.flyTo({ center: focus.center, zoom: Math.max(map.current.getZoom(), 15) })
+  }, [ready, focus])
 
   return <div ref={container} style={{ position: 'absolute', inset: 0 }} />
 }
+
+function setSource(m: maplibregl.Map | null, id: string, data: FeatureCollection) {
+  (m?.getSource(id) as maplibregl.GeoJSONSource | undefined)?.setData(data)
+}
+
+const round = (n: number) => Math.round(n * 1e6) / 1e6
 
 const EUR = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
 

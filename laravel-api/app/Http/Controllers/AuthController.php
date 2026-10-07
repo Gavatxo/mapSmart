@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -65,5 +67,39 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Envoie le lien de réinitialisation. Réponse identique que l'email existe ou non
+     * (pas d'énumération des comptes).
+     */
+    public function forgotPassword(Request $request)
+    {
+        $data = $request->validate(['email' => ['required', 'email']]);
+
+        Password::sendResetLink($data);
+
+        return response()->json(['message' => 'Si un compte existe pour cet email, un lien de réinitialisation a été envoyé.']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $data = $request->validate([
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        $status = Password::reset($data, function (User $user, string $password) {
+            $user->forceFill(['password' => Hash::make($password)])->save();
+            $user->tokens()->delete(); // déconnecte toutes les sessions existantes
+            event(new PasswordReset($user));
+        });
+
+        if ($status !== Password::PASSWORD_RESET) {
+            throw ValidationException::withMessages(['email' => 'Lien invalide ou expiré.']);
+        }
+
+        return response()->json(['message' => 'Mot de passe modifié. Vous pouvez vous connecter.']);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Terrain;
 use App\Services\KmlParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class ImportController extends Controller
 {
@@ -21,7 +22,12 @@ class ImportController extends Controller
         ]);
 
         $content = $request->file('file')->get();
-        $features = $this->parser->parse($content);
+
+        try {
+            $features = $this->parser->parse($content);
+        } catch (RuntimeException $e) {
+            abort(422, $e->getMessage());
+        }
 
         abort_if(empty($features), 422, 'Aucun élément exploitable dans ce fichier KML.');
 

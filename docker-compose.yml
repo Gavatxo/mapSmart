@@ -12,14 +12,26 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  # Isochrones (temps/distance). Nécessite un fichier .pbf OSM (voir doc Valhalla).
-  # Décommenter et fournir les tuiles pour activer le calcul de zones.
-  # valhalla:
-  #   image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
-  #   ports:
-  #     - "8002:8002"
-  #   volumes:
-  #     - ./valhalla_tiles:/custom_files
+  # Isochrones (temps/distance) — Valhalla auto-hébergé (instance publique interdite en usage commercial).
+  # Au premier lancement : télécharge l'extrait OSM de la région et construit les tuiles
+  # de routage dans ./valhalla_tiles (10-30 min selon la machine), puis les réutilise.
+  # Lancer avec : docker compose --profile routing up -d valhalla
+  valhalla:
+    image: ghcr.io/valhalla/valhalla-scripted:latest
+    profiles: ["routing"]
+    ports:
+      - "8002:8002"
+    environment:
+      # Région couverte : à élargir (plusieurs URLs séparées par des virgules) selon le périmètre client.
+      tile_urls: ${VALHALLA_PBF_URLS:-https://download.geofabrik.de/europe/france/centre-latest.osm.pbf}
+      use_tiles_ignore_pbf: "True"
+      build_elevation: "False"
+      build_admins: "True"
+      build_time_zones: "True"
+      serve_tiles: "True"
+      force_rebuild: "False"
+    volumes:
+      - ./valhalla_tiles:/custom_files
 
 volumes:
   db_data:

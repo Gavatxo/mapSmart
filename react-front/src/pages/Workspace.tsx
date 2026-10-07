@@ -1,34 +1,36 @@
 import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { FeatureCollection, Geometry } from 'geojson'
 import { api } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
+import LayersPanel from '../layers/LayersPanel'
 import MapView from '../map/MapView'
-
-type MapItem = { id: number; name: string }
-type Zone = { id: number; geojson: Geometry | null }
-type FC = FeatureCollection
-
-const EMPTY: FC = { type: 'FeatureCollection', features: [] }
+import Section from '../ui/Section'
+import { s } from '../ui/styles'
+import MapsPanel from '../workspace/MapsPanel'
+import ZonesPanel from '../zones/ZonesPanel'
+import { EMPTY, firstCoord, type FC, type LngLat, type MapItem, type ResultTerrain, type ViewState, type Zone } from '../types'
 
 export default function Workspace() {
   const { user, logout } = useAuth()
   const qc = useQueryClient()
   const fileRef = useRef<HTMLInputElement>(null)
+  const saveViewTimer = useRef<number | undefined>(undefined)
 
   const [mapId, setMapId] = useState<number | null>(null)
-  const [origin, setOrigin] = useState<[number, number] | null>(null)
-  const [mode, setMode] = useState<'time' | 'distance'>('time')
-  const [value, setValue] = useState(30)
-  const [address, setAddress] = useState('')
+  const [origin, setOrigin] = useState<LngLat | null>(null)
+  const [draft, setDraft] = useState<LngLat[] | null>(null)
+  const [hiddenLayers, setHiddenLayers] = useState<Set<string>>(new Set())
   const [dvfRadius, setDvfRadius] = useState(500)
   const [dvf, setDvf] = useState<FC>(EMPTY)
+  const [fitKey, setFitKey] = useState(0)
+  const [focus, setFocus] = useState<{ center: LngLat; key: number } | null>(null)
   const [status, setStatus] = useState('')
 
   const maps = useQuery({
     queryKey: ['maps'],
     queryFn: async () => (await api.get<MapItem[]>('/maps')).data,
   })
+  const currentMap = maps.data?.find((m) => m.id === mapId) ?? null
 
   const terrains = useQuery({
     queryKey: ['terrains', mapId],
@@ -46,15 +48,7 @@ export default function Workspace() {
   const results = useQuery({
     queryKey: ['results', mapId],
     enabled: !!mapId,
-    queryFn: async () => (await api.get(`/maps/${mapId}/results`)).data,
-  })
-
-  const createMap = useMutation({
-    mutationFn: async (name: string) => (await api.post('/maps', { name })).data,
-    onSuccess: (m) => {
-      qc.invalidateQueries({ queryKey: ['maps'] })
-      selectMap(m.id)
-    },
+    queryFn: async () => (await api.get<{ count: number; terrains: ResultTerrain[] }>(`/maps/${mapId}/results`)).data,
   })
 
   const importKml = useMutation({
@@ -63,35 +57,16 @@ export default function Workspace() {
       form.append('file', file)
       return (await api.post(`/maps/${mapId}/imports`, form)).data
     },
-    onSuccess: (r) => {
+    onMutate: () => setStatus('Import en cours…'),
+    onSuccess: async (r) => {
       setStatus(`${r.feature_count} éléments importés.`)
-      qc.invalidateQueries({ queryKey: ['terrains', mapId] })
-      qc.invalidateQueries({ queryKey: ['results', mapId] })
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ['terrains', mapId] }),
+        qc.invalidateQueries({ queryKey: ['results', mapId] }),
+      ])
+      setFitKey((k) => k + 1)
     },
-    onError: () => setStatus('Import KML échoué.'),
-  })
-
-  const createZone = useMutation({
-    mutationFn: async () => {
-      if (!origin) throw new Error('origin')
-      return (await api.post(`/maps/${mapId}/zones`, { mode, value, origin })).data
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['zones', mapId] })
-      qc.invalidateQueries({ queryKey: ['results', mapId] })
-      setStatus('Zone calculée.')
-    },
-    onError: () => setStatus('Calcul de zone indisponible (Valhalla requis).'),
-  })
-
-  const clearZones = useMutation({
-    mutationFn: async () => api.delete(`/maps/${mapId}/zones`),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['zones', mapId] })
-      qc.invalidateQueries({ queryKey: ['results', mapId] })
-      setStatus('Zones supprimées.')
-    },
-    onError: () => setStatus('Suppression des zones échouée.'),
+    onError: (e: any) => setStatus(e.response?.data?.message ?? 'Import KML échoué.'),
   })
 
   const loadDvf = useMutation({
@@ -108,19 +83,45 @@ export default function Workspace() {
     onError: () => setStatus('Données DVF indisponibles.'),
   })
 
-  async function geocode() {
-    if (!address.trim()) return
-    setStatus('Recherche de l’adresse…')
-    try {
-      const { data } = await api.get('/geocode', { params: { q: address } })
-      setOrigin([data.lng, data.lat])
-      setStatus(`Départ : ${data.label}`)
-    } catch {
-      setStatus('Adresse introuvable.')
+  function selectMap(id: number | null) {
+    setMapId(id)
+    setDvf(EMPTY)
+    setDraft(null)
+    setOrigin(null)
+    setHiddenLayers(new Set())
+    setStatus('')
+  }
+
+  // Sauvegarde du cadrage (débounce) : la carte se rouvre là où on l'a laissée.
+  function saveView(view: ViewState) {
+    window.clearTimeout(saveViewTimer.current)
+    const id = mapId
+    saveViewTimer.current = window.setTimeout(() => {
+      api.patch(`/maps/${id}`, { view_state: view })
+        .then(() => qc.setQueryData<MapItem[]>(['maps'], (list) => list?.map((m) => (m.id === id ? { ...m, view_state: view } : m))))
+        .catch(() => {})
+    }, 1000)
+  }
+
+  function onMapClick(p: LngLat) {
+    if (draft) setDraft([...draft, p])
+    else {
+      setOrigin(p)
+      setStatus('Point de départ placé.')
     }
   }
 
-  const terrainData = useMemo(() => terrains.data ?? EMPTY, [terrains.data])
+  const hasZones = (zones.data?.length ?? 0) > 0
+  const compatibleIds = useMemo(() => new Set(results.data?.terrains.map((t) => t.id)), [results.data])
+
+  // Terrains affichés : calques masqués retirés ; grisés s'ils sont hors des zones.
+  const terrainData = useMemo<FC>(() => ({
+    type: 'FeatureCollection',
+    features: (terrains.data?.features ?? [])
+      .filter((f) => !hiddenLayers.has((f.properties?.layer as string | null) ?? 'Autres'))
+      .map((f) => ({ ...f, properties: { ...f.properties, compatible: hasZones ? compatibleIds.has(f.properties?.id) : true } })),
+  }), [terrains.data, hiddenLayers, hasZones, compatibleIds])
+
   const zoneData = useMemo<FC>(() => ({
     type: 'FeatureCollection',
     features: (zones.data ?? [])
@@ -128,63 +129,54 @@ export default function Workspace() {
       .map((z) => ({ type: 'Feature', geometry: z.geojson!, properties: { id: z.id } })),
   }), [zones.data])
 
-  function selectMap(id: number | null) {
-    setMapId(id)
-    setDvf(EMPTY)
-  }
+  const visibleResults = (results.data?.terrains ?? []).filter((t) => !hiddenLayers.has(t.layer ?? 'Autres'))
 
   return (
-    <div style={s.app}>
-      <header style={s.header}>
+    <div style={layout.app}>
+      <header style={layout.header}>
         <strong>MapSmart</strong>
-        <span style={s.spacer} />
-        <span style={s.muted}>{user?.name}</span>
-        <button style={s.ghost} onClick={logout}>Déconnexion</button>
+        <span style={{ flex: 1 }} />
+        <span style={{ ...s.muted, color: '#c5d0de' }}>{user?.name}</span>
+        <button style={{ ...s.ghost, color: '#c5d0de' }} onClick={logout}>Déconnexion</button>
       </header>
 
-      <aside style={s.aside}>
-        <Section title="Cartes">
-          <select style={s.field} value={mapId ?? ''} onChange={(e) => selectMap(Number(e.target.value) || null)}>
-            <option value="">— choisir une carte —</option>
-            {maps.data?.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
-          </select>
-          <button style={s.secondary} onClick={() => {
-            const name = prompt('Nom de la carte ?')
-            if (name) createMap.mutate(name)
-          }}>+ Nouvelle carte</button>
-        </Section>
+      <aside style={layout.aside}>
+        <MapsPanel maps={maps.data ?? []} current={currentMap} onSelect={selectMap} />
 
         {mapId && (
           <>
             <Section title="Terrains">
               <input ref={fileRef} type="file" accept=".kml,application/vnd.google-earth.kml+xml" style={{ display: 'none' }}
-                onChange={(e) => e.target.files?.[0] && importKml.mutate(e.target.files[0])} />
-              <button style={s.secondary} onClick={() => fileRef.current?.click()}>Importer un KML</button>
-              <p style={s.muted}>{terrainData.features.length} terrains sur la carte</p>
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) importKml.mutate(file)
+                  e.target.value = ''
+                }} />
+              <button style={s.secondary} disabled={importKml.isPending} onClick={() => fileRef.current?.click()}>Importer un KML</button>
+              <p style={s.muted}>{terrains.data?.features.length ?? 0} terrains sur la carte</p>
             </Section>
 
-            <Section title="Zone de recherche">
-              <div style={s.row}>
-                <input style={{ ...s.field, flex: 1 }} placeholder="Adresse de départ" value={address}
-                  onChange={(e) => setAddress(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && geocode()} />
-                <button style={s.icon} onClick={geocode}>→</button>
-              </div>
-              <p style={s.muted}>ou cliquez sur la carte pour placer le départ</p>
-              <div style={s.row}>
-                <select style={{ ...s.field, flex: 1 }} value={mode} onChange={(e) => setMode(e.target.value as any)}>
-                  <option value="time">Temps (min)</option>
-                  <option value="distance">Distance (km)</option>
-                </select>
-                <input style={{ ...s.field, width: 70 }} type="number" min={1} max={180} value={value}
-                  onChange={(e) => setValue(Number(e.target.value))} />
-              </div>
-              <button style={s.primary} disabled={!origin || createZone.isPending} onClick={() => createZone.mutate()}>
-                Calculer la zone
-              </button>
-              <button style={s.ghost} disabled={!zoneData.features.length || clearZones.isPending}
-                onClick={() => clearZones.mutate()}>
-                Réinitialiser les zones ({zoneData.features.length})
-              </button>
+            <LayersPanel terrains={terrains.data ?? EMPTY} hidden={hiddenLayers} onChange={setHiddenLayers} />
+
+            <ZonesPanel mapId={mapId} zones={zones.data ?? []} origin={origin}
+              onOrigin={(p, label) => { setOrigin(p); setFocus({ center: p, key: Date.now() }); setStatus(`Départ : ${label}`) }}
+              draft={draft} onDraft={setDraft} onStatus={setStatus} />
+
+            <Section title={hasZones ? 'Terrains compatibles' : 'Terrains'}>
+              <p style={s.muted}><strong style={{ color: '#11243e', fontSize: 15 }}>{visibleResults.length}</strong> {hasZones ? 'dans toutes les zones' : 'au total (aucune zone)'}</p>
+              {hasZones && visibleResults.length > 0 && (
+                <ul style={{ ...s.list, maxHeight: 220, overflow: 'auto' }}>
+                  {visibleResults.map((t) => (
+                    <li key={t.id}>
+                      <button style={{ ...s.item, width: '100%', border: 0, cursor: 'pointer', textAlign: 'left' }}
+                        onClick={() => { const c = firstCoord(t.geojson); if (c) setFocus({ center: c, key: Date.now() }) }}>
+                        <span style={s.grow}>{t.name}</span>
+                        <span style={s.muted}>{t.layer}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Section>
 
             <Section title="Ventes réelles (DVF)">
@@ -192,59 +184,32 @@ export default function Workspace() {
                 <select style={{ ...s.field, flex: 1 }} value={dvfRadius} onChange={(e) => setDvfRadius(Number(e.target.value))}>
                   {[250, 500, 1000, 2000, 5000].map((r) => <option key={r} value={r}>Rayon {r} m</option>)}
                 </select>
-                <button style={s.secondary} disabled={!origin || loadDvf.isPending} onClick={() => loadDvf.mutate()}>
-                  Afficher
-                </button>
+                <button style={s.secondary} disabled={!origin || loadDvf.isPending} onClick={() => loadDvf.mutate()}>Afficher</button>
               </div>
-              <p style={s.muted}>Autour du point de départ · ventes 2024–2025 de la commune</p>
-              {dvf.features.length > 0 && (
-                <button style={s.ghost} onClick={() => setDvf(EMPTY)}>Masquer les ventes</button>
-              )}
-            </Section>
-
-            <Section title="Résultats">
-              <strong>{results.data?.count ?? terrainData.features.length}</strong> terrains compatibles
+              <p style={s.muted}>Autour du point de départ</p>
+              {dvf.features.length > 0 && <button style={s.ghost} onClick={() => setDvf(EMPTY)}>Masquer les ventes</button>}
             </Section>
           </>
         )}
 
-        {status && <div style={s.status}>{status}</div>}
+        {status && <div style={layout.status}>{status}</div>}
       </aside>
 
-      <main style={s.main}>
-        {mapId
-          ? <MapView terrains={terrainData} zones={zoneData} dvf={dvf} onMapClick={({ lng, lat }) => {
-              setOrigin([lng, lat]); setStatus('Point de départ placé.')
-            }} />
-          : <div style={s.empty}>Sélectionnez ou créez une carte pour commencer.</div>}
+      <main style={layout.main}>
+        {mapId && currentMap
+          ? <MapView key={mapId} terrains={terrainData} zones={zoneData} dvf={dvf} origin={origin} draft={draft}
+              initialView={currentMap.view_state} fitKey={fitKey} focus={focus}
+              onMapClick={onMapClick} onViewChange={saveView} />
+          : <div style={layout.empty}>Sélectionnez ou créez une carte pour commencer.</div>}
       </main>
     </div>
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section style={s.section}>
-      <h3 style={s.sectionTitle}>{title}</h3>
-      {children}
-    </section>
-  )
-}
-
-const s: Record<string, React.CSSProperties> = {
+const layout: Record<string, React.CSSProperties> = {
   app: { display: 'grid', gridTemplateColumns: '340px 1fr', gridTemplateRows: '56px 1fr', height: '100vh' },
   header: { gridColumn: '1/-1', display: 'flex', alignItems: 'center', gap: 12, padding: '0 18px', background: '#11243e', color: '#fff' },
-  spacer: { flex: 1 },
-  muted: { color: '#637083', fontSize: 13 },
   aside: { overflow: 'auto', background: '#fff', borderRight: '1px solid #dce3ec' },
-  section: { padding: 16, borderBottom: '1px solid #eef2f7', display: 'flex', flexDirection: 'column', gap: 8 },
-  sectionTitle: { margin: 0, fontSize: 14 },
-  field: { height: 40, padding: '0 10px', border: '1px solid #dce3ec', borderRadius: 9 },
-  row: { display: 'flex', gap: 8 },
-  primary: { height: 42, border: 0, borderRadius: 10, background: '#1769e0', color: '#fff', fontWeight: 700, cursor: 'pointer' },
-  secondary: { height: 40, border: '1px solid #dce3ec', borderRadius: 9, background: '#fff', cursor: 'pointer' },
-  ghost: { border: 0, background: 'none', color: '#637083', cursor: 'pointer', fontSize: 13 },
-  icon: { width: 42, border: 0, borderRadius: 9, background: '#11243e', color: '#fff', cursor: 'pointer' },
   main: { position: 'relative', background: '#dfe7ef' },
   empty: { display: 'grid', placeItems: 'center', height: '100%', color: '#637083' },
   status: { margin: 16, padding: 10, borderRadius: 8, background: '#eef5ff', color: '#0e4fae', fontSize: 13 },

@@ -1,6 +1,9 @@
 <?php
 
 return [
+    // URL du front React (liens envoyés par email : réinitialisation du mot de passe…).
+    'frontend_url' => rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/'),
+
     // Isochrones : instance Valhalla auto-hébergée (usage commercial interdit sur l'instance publique).
     'valhalla_url' => env('VALHALLA_URL', 'http://127.0.0.1:8002'),
 

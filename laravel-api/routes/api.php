@@ -8,12 +8,16 @@ use App\Http\Controllers\TerrainController;
 use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
 
-// --- Public ---
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
+// --- Public (limité contre le bruteforce) ---
+Route::middleware('throttle:auth')->group(function () {
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
+});
 
 // --- Authentifié (token Sanctum, données scopées au tenant) ---
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
@@ -27,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/maps/{map}/zones', [ZoneController::class, 'store']);
     Route::delete('/maps/{map}/zones', [ZoneController::class, 'clear']);
     Route::get('/maps/{map}/results', [ZoneController::class, 'results']);
+    Route::patch('/zones/{zone}', [ZoneController::class, 'update']);
     Route::delete('/zones/{zone}', [ZoneController::class, 'destroy']);
 
     // Services géo

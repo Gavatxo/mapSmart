@@ -32,6 +32,8 @@ class ZoneController extends Controller
             'value' => ['required_unless:mode,polygon', 'nullable', 'numeric', 'min:1', 'max:180'],
             'origin' => ['nullable', 'array', 'size:2'], // [lng, lat]
             'geojson' => ['nullable', 'array'],
+            'geojson.type' => ['required_if:mode,polygon', 'in:Polygon,MultiPolygon'],
+            'geojson.coordinates' => ['required_if:mode,polygon', 'array'],
         ]);
 
         if ($data['mode'] === 'polygon') {
@@ -61,6 +63,14 @@ class ZoneController extends Controller
         }
 
         return response()->json($zone, 201);
+    }
+
+    /** Renomme une zone. */
+    public function update(Request $request, SearchZone $zone)
+    {
+        $zone->update($request->validate(['label' => ['nullable', 'string', 'max:255']]));
+
+        return $zone;
     }
 
     public function destroy(SearchZone $zone)

@@ -11,7 +11,7 @@ use RuntimeException;
  * Parse un KML (export Google My Maps) en géométries GeoJSON.
  *
  * Portage serveur de la logique du prototype front. Les coordonnées Google
- * exactes sont conservées. Chaque Folder KML devient un "layer" ; chaque
+ * exactes sont conservées. Chaque Folder KML devient un "layer" ("Autres" hors Folder) ; chaque
  * Placemark devient un terrain (Point, Polygon ou LineString).
  *
  * Utilise DOMXPath avec le namespace KML par défaut enregistré une fois,
@@ -23,11 +23,20 @@ class KmlParser
 {
     private const NS = 'http://www.opengis.net/kml/2.2';
 
+    /** Au-delà, l'import est refusé (protection mémoire / abus). */
+    public const MAX_FEATURES = 10000;
+
     public function parse(string $kml): array
     {
+        // Un KML légitime n'a jamais de DTD : on refuse toute déclaration DOCTYPE/ENTITY,
+        // ce qui ferme la porte aux XXE et aux « billion laughs ».
+        if (preg_match('/<!(DOCTYPE|ENTITY)/i', $kml)) {
+            throw new RuntimeException('Fichier KML refusé : déclarations DTD non autorisées.');
+        }
+
         $doc = new DOMDocument();
         $previous = libxml_use_internal_errors(true);
-        $ok = $doc->loadXML($kml);
+        $ok = $doc->loadXML($kml, LIBXML_NONET | LIBXML_COMPACT);
         libxml_use_internal_errors($previous);
 
         if (! $ok) {
@@ -39,13 +48,16 @@ class KmlParser
 
         $features = [];
 
-        foreach ($xpath->query('//k:Folder') as $folder) {
-            $layer = trim($this->text($xpath, 'k:name', $folder) ?? 'Autres') ?: 'Autres';
+        // Tous les Placemarks, y compris hors Folder ; le calque est le Folder parent le plus proche.
+        foreach ($xpath->query('//k:Placemark') as $pm) {
+            $folder = $xpath->query('ancestor::k:Folder[1]', $pm)->item(0);
+            $layer = $folder ? (trim($this->text($xpath, 'k:name', $folder) ?? '') ?: 'Autres') : 'Autres';
 
-            foreach ($xpath->query('k:Placemark', $folder) as $pm) {
-                if ($feature = $this->placemark($xpath, $pm, $layer)) {
-                    $features[] = $feature;
-                }
+            if ($feature = $this->placemark($xpath, $pm, $layer)) {
+                $features[] = $feature;
+            }
+            if (count($features) > self::MAX_FEATURES) {
+                throw new RuntimeException('Fichier KML trop volumineux (max ' . self::MAX_FEATURES . ' éléments).');
             }
         }
 
